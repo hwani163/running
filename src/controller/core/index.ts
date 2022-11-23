@@ -15,13 +15,28 @@ type DefaultResponseData<T> = {
 export type Res<T> = NextApiResponse<DefaultResponseData<T>>;
 
 type ObjectType = {};
+
+export type GetHandler<T> = {
+  _get?(): void
+}
+
+export type PostHandler<T> = {
+  _post?(): void
+}
+
+export type RequestHandler<T> = never
+| GetHandler<T>
+| PostHandler<T>
+| GetHandler<T> & PostHandler<T>
+
 export abstract class ApiRoute {
   _get?: (req: GetReq<ObjectType>, res: Res<ObjectType>) => void;
   _post?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
   _delete?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
   _patch?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
 
-  make = (req: NextApiRequest, res: NextApiResponse) => {
+
+  createHandler = (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "GET") {
       if (typeof this._get === "function") {
         return this._get(req, res);

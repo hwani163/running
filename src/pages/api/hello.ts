@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { ApiRoute, GetReq, Res } from "../../controller/core";
 
 class RouteClass extends ApiRoute {
@@ -11,6 +10,4 @@ class RouteClass extends ApiRoute {
       .json({ success: true, data: { name: "hello" }, message: "good" });
   };
 }
-const Route = new RouteClass();
-
-export default Route.make;
+export default new RouteClass().createHandler;
