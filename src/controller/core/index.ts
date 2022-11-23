@@ -1,6 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import type { ZodError, ZodObject } from "zod";
 import { HttpError } from "./error";
+import { omit } from "lodash";
 export interface GetReq<T> extends Omit<NextApiRequest, "query"> {
   query: Partial<T>;
 }
@@ -17,24 +19,24 @@ export type Res<T> = NextApiResponse<DefaultResponseData<T>>;
 type ObjectType = {};
 
 export type GetHandler<T> = {
-  _get?(): void
-}
+  _get?(): void;
+};
 
 export type PostHandler<T> = {
-  _post?(): void
-}
+  _post?(): void;
+};
 
-export type RequestHandler<T> = never
-| GetHandler<T>
-| PostHandler<T>
-| GetHandler<T> & PostHandler<T>
+export type RequestHandler<T> =
+  | never
+  | GetHandler<T>
+  | PostHandler<T>
+  | (GetHandler<T> & PostHandler<T>);
 
 export abstract class ApiRoute {
   _get?: (req: GetReq<ObjectType>, res: Res<ObjectType>) => void;
   _post?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
   _delete?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
   _patch?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
-
 
   createHandler = (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "GET") {
@@ -67,3 +69,33 @@ export abstract class ApiRoute {
     throw new HttpError(405);
   };
 }
+
+function platErrorMessage(error: ZodError) {
+  const formatedError = omit(error.format(), ["_errors"]);
+  // console.log(formatedError);
+  // for (const [key, value] of Object.entries(formatedError)) {
+  //   console.log(`${key}: ${value}`);
+  // }
+  Object.entries(formatedError).map(([key, value]) => {
+    console.log(key, value["_errors"]);
+  });
+
+  if (Array.isArray(Object.keys(formatedError))) {
+    // const firstKey = Object.keys(formatedError)[0];
+    // if (Array.isArray(formatedError[firstKey]._errors)) {
+    //   formatedError[firstKey]._errors.some((message) => {
+    //     alert(message);
+    //     return true;
+    //   });
+    // }
+  }
+}
+
+export const validator = (zodObject: ZodObject<{}>, params: {}) => {
+  const result = zodObject.safeParse(params);
+  if (result.success) {
+    return { success: true, message: "success" };
+  } else {
+    return { success: false, message: platErrorMessage(result.error) };
+  }
+};
