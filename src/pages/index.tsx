@@ -1,8 +1,11 @@
+import axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { useState } from 'react';
+import styles from '@styles/Home.module.css'
 
 export default function Home() {
+  const [code,setCode] = useState('');
   return (
     <div className={styles.container}>
       <Head>
@@ -12,46 +15,33 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <div onClick={() => {
+          // axios.get('/api/auth/strava')
+          const domain = 'http://localhost:3000/auth/strava'
+          const clientid = 60205
+          const redirectUrl=`${domain}&approval_prompt=force&scope=read,activity:read`
+          const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirectUrl}`;
+          console.log(stravaAuthUrl)
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
+          let xPos = (document.body.offsetWidth) - 500
+          xPos += window.screenLeft; // 듀얼 모니터일 때
+          var yPos = (document.body.offsetHeight/2) - (700/2);
+          window.open(stravaAuthUrl, "pop_name", `toolbar=no, menubar=no, scrollbars=yes, resizable=no, width=500, height=700, left=${xPos}, top=${yPos}` );          
+          // console.log(newWindow)
+          // const interval = setInterval(() => {
+          //   try {
+          //     if(newWindow?.location.search){
+          //       setCode(String(newWindow?.location.search))
+          //       clearInterval(interval)
+          //       newWindow.close();
+          //     }
+          //   } catch (error) {
+              
+          //   }            
+          // }, 500);
+        }}>스트라바로그인</div>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        {code}
       </main>
 
       <footer className={styles.footer}>

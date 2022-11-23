@@ -57,7 +57,6 @@ class RouteClass extends ApiRoute {
     res: Res<{ name: string }>
   ) => {
     const validatorResult = validator(HelloParams, req.query);
-    console.log(validatorResult.message);
 
     res
       .status(200)
