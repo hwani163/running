@@ -4,11 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "yarn migrate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma":"prisma generate --schema ./src/database/scheme.prisma",
+    "migrate":"prisma migrate dev --schema ./src/database/scheme.prisma && yarn prisma"
   },
   "dependencies": {
+    "@prisma/client": "^4.6.1",
     "@types/lodash": "^4.14.189",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
@@ -26,6 +29,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@types/recoil": "^0.0.9"
+    "@types/recoil": "^0.0.9",
+    "prisma": "^4.6.1"
   }
 }

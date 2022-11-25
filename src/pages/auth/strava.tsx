@@ -1,25 +1,26 @@
 import axios from 'axios'
-import Head from 'next/head'
-import Image from 'next/image'
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from '@/styles/Home.module.css'
 
-export default function auth_strava() {
+export default function Auth_Strava() {
   const router = useRouter();
 
-  useEffect(()=>{
-    console.log(router.query);
-    const {state,code,scope,error} = router.query;
-    if(error) window.close();
-    if(code){
-      axios.post('/api/auth',{
-        platform:'strava',
-        code:code,
+  useEffect(() => {
+    const { state, code, scope, error } = router.query;
+    if (error) window.close();
+    if (code) {
+      axios.post('/api/auth', {
+        platform: 'strava',
+        code: code,
+      }).then(({ data }) => {
+        if (data.success) {
+          window.close();
+        }
       })
     }
-  },[router.query])
-  
+  }, [router.query])
+
   return (
     <div className={styles.container}>
       로그인중....

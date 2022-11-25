@@ -1,0 +1,36 @@
+// https://www.prisma.io/docs/concepts/components/prisma-schema
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model drinks {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+enum Role {
+  M
+  W
+}
+
+model categories {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model users {
+  id            Int      @id @default(autoincrement())
+  name          String
+  sex           Role     @default(M)
+  avatar        String   @default("empty")
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  access_token  String
+  refresh_token String
+  enabled       Boolean  @default(true)
+}

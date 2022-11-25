@@ -16,27 +16,22 @@ type DefaultResponseData<T> = {
 };
 export type Res<T> = NextApiResponse<DefaultResponseData<T>>;
 
-type ObjectType = {};
-
-export type GetHandler<T> = {
-  _get?(): void;
-};
-
-export type PostHandler<T> = {
-  _post?(): void;
-};
-
-export type RequestHandler<T> =
-  | never
-  | GetHandler<T>
-  | PostHandler<T>
-  | (GetHandler<T> & PostHandler<T>);
+type ObjectType = { [key: string]: any };
 
 export abstract class ApiRoute {
   _get?: (req: GetReq<ObjectType>, res: Res<ObjectType>) => void;
   _post?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
   _delete?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
   _patch?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
+
+  success = (res: Res<ObjectType>, data: any) => {
+    res
+      .status(200)
+      .json({
+        success: true, data: data,
+        message: "good"
+      });
+  }
 
   createHandler = (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "GET") {
@@ -77,6 +72,7 @@ function platErrorMessage(error: ZodError) {
   //   console.log(`${key}: ${value}`);
   // }
   Object.entries(formatedError).map(([key, value]) => {
+    //@ts-ignore
     console.log(key, value["_errors"]);
   });
 
