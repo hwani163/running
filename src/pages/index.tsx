@@ -3,9 +3,10 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useState } from 'react';
 import styles from '@styles/Home.module.css'
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const [code,setCode] = useState('');
+  const [code, setCode] = useState('');
   return (
     <div className={styles.container}>
       <Head>
@@ -17,16 +18,16 @@ export default function Home() {
       <main className={styles.main}>
         <div onClick={() => {
           // axios.get('/api/auth/strava')
-          const domain = 'http://localhost:3000/auth/strava'
+          const domain = `${window.location.origin}/auth/strava`
           const clientid = 60205
-          const redirectUrl=`${domain}&approval_prompt=force&scope=read,activity:read`
+          const redirectUrl = `${domain}&approval_prompt=force&scope=read,activity:read`
           const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirectUrl}`;
           console.log(stravaAuthUrl)
 
           let xPos = (document.body.offsetWidth) - 500
           xPos += window.screenLeft; // 듀얼 모니터일 때
-          var yPos = (document.body.offsetHeight/2) - (700/2);
-          window.open(stravaAuthUrl, "pop_name", `toolbar=no, menubar=no, scrollbars=yes, resizable=no, width=500, height=700, left=${xPos}, top=${yPos}` );          
+          var yPos = (document.body.offsetHeight / 2) - (700 / 2);
+          window.open(stravaAuthUrl, "pop_name", `toolbar=no, menubar=no, scrollbars=yes, resizable=no, width=500, height=700, left=${xPos}, top=${yPos}`);
           // console.log(newWindow)
           // const interval = setInterval(() => {
           //   try {
@@ -36,7 +37,7 @@ export default function Home() {
           //       newWindow.close();
           //     }
           //   } catch (error) {
-              
+
           //   }            
           // }, 500);
         }}>스트라바로그인</div>
