@@ -4,5 +4,6 @@ declare namespace NodeJS {
     STRAVA_SECRET: string;
     GOOGLE_CLIENT_ID: string;
     GOOGLE_SECRET: string;
+    COOKIE_SECRET:string;
   }
 }
