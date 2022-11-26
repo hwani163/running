@@ -18,17 +18,9 @@ class RouteClass extends ApiRoute {
     if (req.body.platform === 'strava') {
       const { code } = req.body;
       if (code) {
-        const result = await strava.oauth.getToken(code);
-        const user = await prisma.users.create({
-          data: {
-            avatar: result.athlete.profile_medium,
-            refresh_token: result.refresh_token,
-            access_token: result.access_token,
-            name: result.athlete.firstname,
-            sex: result.athlete.sex,
-          }
-        })
-        this.success(res as Res<{}>, user);
+        // const result = await strava.oauth.getToken(code);
+
+        // this.success(res as Res<{}>, user);
       }
     }
 
