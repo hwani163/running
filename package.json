@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "yarn migrate && next build",
+    "build": "yarn mig && next build",
     "start": "next start",
     "lint": "next lint",
     "prisma": "prisma generate --schema ./src/database/scheme.prisma",
