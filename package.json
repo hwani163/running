@@ -7,10 +7,11 @@
     "build": "yarn migrate && next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma":"prisma generate --schema ./src/database/scheme.prisma",
-    "migrate":"prisma migrate dev --schema ./src/database/scheme.prisma && yarn prisma"
+    "prisma": "prisma generate --schema ./src/database/scheme.prisma",
+    "migrate": "prisma migrate dev --schema ./src/database/scheme.prisma && yarn prisma"
   },
   "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.6.1",
     "@types/lodash": "^4.14.189",
     "@types/node": "18.11.9",
@@ -21,6 +22,7 @@
     "eslint-config-next": "13.0.3",
     "lodash": "^4.17.21",
     "next": "13.0.3",
+    "next-auth": "^4.17.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "recoil": "^0.7.6",
