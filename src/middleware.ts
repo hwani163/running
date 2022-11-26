@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   console.log('middleware')
+  console.log(request);
   // Call our authentication function to check the request
   if (!request) {
     // Respond with JSON indicating an error message
