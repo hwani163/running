@@ -6,11 +6,8 @@ import { prisma } from '@database';
 
 export default NextAuth({
   secret: process.env.COOKIE_SECRET,
-
   adapter: PrismaAdapter(prisma),
-
   debug: true,
-
   providers: [
     StravaProvider({
       clientId: process.env.STRAVA_CLIENT_ID,
@@ -29,21 +26,20 @@ export default NextAuth({
         },
       },
     }),
-
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-      authorization: {
-        params: {
-          scope: [
-            'https://www.googleapis.com/auth/userinfo.profile',
-            'https://www.googleapis.com/auth/userinfo.email',
-            'https://www.googleapis.com/auth/fitness.activity.read',
-            'https://www.googleapis.com/auth/fitness.body.read',
-          ].join(' '),
-        }
-      }
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID,
+    //   clientSecret: process.env.GOOGLE_SECRET,
+    //   authorization: {
+    //     params: {
+    //       scope: [
+    //         'https://www.googleapis.com/auth/userinfo.profile',
+    //         'https://www.googleapis.com/auth/userinfo.email',
+    //         'https://www.googleapis.com/auth/fitness.activity.read',
+    //         'https://www.googleapis.com/auth/fitness.body.read',
+    //       ].join(' '),
+    //     }
+    //   }
+    // }),
   ],
   // pages: {
   // signIn: '/auth/signin',
