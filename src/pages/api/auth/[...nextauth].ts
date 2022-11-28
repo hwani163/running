@@ -1,11 +1,12 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import StravaProvider from "next-auth/providers/strava";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from '@database';
 
-export default NextAuth({
-  secret: process.env.COOKIE_SECRET,
+
+export const nextAuthOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   debug: true,
   providers: [
@@ -19,12 +20,14 @@ export default NextAuth({
       },
       token: {
         async request({ client, params, checks, provider }) {
-          const { token_type, expires_at, refresh_token, access_token } = await client.oauthCallback(provider.callbackUrl, params, checks)
+          const { token_type, expires_at, refresh_token, access_token } = await client.oauthCallback(provider.callbackUrl, params, checks);
+          console.log(access_token);
           return {
             tokens: { token_type, expires_at, refresh_token, access_token },
           }
         },
       },
+
     }),
     // GoogleProvider({
     //   clientId: process.env.GOOGLE_CLIENT_ID,
@@ -42,10 +45,11 @@ export default NextAuth({
     // }),
   ],
   // pages: {
-  // signIn: '/auth/signin',
+  // signIn: '/auth/join',
   // signOut: '/auth/signout',
   // error: '/auth/error', // Error code passed in query string as ?error=
   // verifyRequest: '/auth/verify-request', // (used for check email message)
-  // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+  // newUser: '/auth/join' // New users will be directed here on first sign in (leave the property out if not of interest)
   // }
-})
+}
+export default NextAuth(nextAuthOptions)
