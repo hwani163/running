@@ -21,7 +21,6 @@ export const nextAuthOptions: NextAuthOptions = {
       token: {
         async request({ client, params, checks, provider }) {
           const { token_type, expires_at, refresh_token, access_token } = await client.oauthCallback(provider.callbackUrl, params, checks);
-          console.log(access_token);
           return {
             tokens: { token_type, expires_at, refresh_token, access_token },
           }

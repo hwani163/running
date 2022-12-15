@@ -15,7 +15,6 @@ export default withAuth({
           },
         } as IncomingMessage
       });
-      console.log(session?.expires, 'Session');
       // `/admin` requires admin role
       // if (req.)
       if (session) return true;
@@ -24,4 +23,4 @@ export default withAuth({
   },
 })
 
-export const config = { matcher: ["/home", "/me"] }
+export const config = { matcher: ["/", "/me"] }

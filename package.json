@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "yarn prisma && next dev",
     "build": "yarn mig && next build",
     "start": "next start",
     "lint": "next lint",
@@ -17,6 +17,7 @@
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
+    "antd-mobile": "^5.26.0",
     "axios": "^1.2.0",
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.3",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/recoil": "^0.0.9",
+    "next-transpile-modules": "^10.0.0",
     "prisma": "^4.6.1"
   }
 }
