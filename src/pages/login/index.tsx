@@ -10,7 +10,6 @@ import { useSession } from '@hooks/useSession';
 
 export default function Home() {
   const { data: session, status, } = useSession();
-  console.log(status);
   if (status === 'loading') {
     return <div>loading..</div>
   }

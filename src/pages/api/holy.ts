@@ -56,8 +56,9 @@ class RouteClass extends ApiRoute {
     req: GetReq<{ user: string; hello: string }>,
     res: Res<{ name: string }>
   ) => {
-    const validatorResult = validator(HelloParams, req.query);
-
+    // const validatorResult = validator(HelloParams, req.query);
+    // console.log(req);
+    
     res
       .status(200)
       .json({ success: true, data: { name: "hello" }, message: "good" });

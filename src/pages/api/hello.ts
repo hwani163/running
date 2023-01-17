@@ -1,5 +1,6 @@
 import { ApiRoute, GetReq, Res, validator } from "../../controller/core";
 import z from "zod";
+import { prisma } from "@database";
 export const HelloParams = z.object({
   id: z.number().or(z.nan()),
   type: z.enum(["daily", "monthly"]),
@@ -52,11 +53,15 @@ export const HelloParams = z.object({
 export type HelloParams = z.infer<typeof HelloParams>;
 
 class RouteClass extends ApiRoute {
-  _get = (
+  _get = async (
     req: GetReq<{ user: string; hello: string }>,
     res: Res<{ name: string }>
   ) => {
+    console.log(req, "req");
     const validatorResult = validator(HelloParams, req.query);
+    // const result = await prisma.account.findFirst({
+    //   where: { userId: Number(user.id) },
+    // });
 
     res
       .status(200)
