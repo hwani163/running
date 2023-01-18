@@ -17,26 +17,15 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 export default function Home() {
-  const { data: session, status } = useSession();
-  console.log(session);
-  if (status === "loading") {
-    return <div>loading..</div>;
-  }
-
   // 랭킹화면이 나와야한다.
   return (
     <div
       onClick={async () => {
         const a = await axios.get("/api/holy");
-        console.log(a);
+        // console.log(a);
       }}
     >
-      {/* <div>1위</div>
-      <div>하사</div>
-      <div>원석환</div>
-      <div>100km</div>
-      <div>200km(목표거리)</div>
-      <div>50%(달성률)</div> */}
+      홀리
     </div>
   );
 }

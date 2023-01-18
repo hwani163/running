@@ -3,6 +3,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { ZodError, ZodObject } from "zod";
 import { HttpError } from "./error";
 import { omit } from "lodash";
+import { unstable_getServerSession } from "next-auth/next";
+import { nextAuthOptions } from "../../pages/api/auth/[...nextauth]"
+import { Session } from "next-auth/core/types";
+import { prisma } from "@database";
+import { Account, User } from "@prisma/client";
 export interface GetReq<T> extends Omit<NextApiRequest, "query"> {
   query: Partial<T>;
 }
@@ -18,11 +23,13 @@ export type Res<T> = NextApiResponse<DefaultResponseData<T>>;
 
 type ObjectType = { [key: string]: any };
 
+export type UserInfo = Account & User
+
 export abstract class ApiRoute {
-  _get?: (req: GetReq<ObjectType>, res: Res<ObjectType>) => void;
-  _post?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
-  _delete?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
-  _patch?: (req: PostReq<ObjectType>, res: Res<ObjectType>) => void;
+  _get?: (req: GetReq<ObjectType>, res: Res<ObjectType>, session: UserInfo) => void;
+  _post?: (req: PostReq<ObjectType>, res: Res<ObjectType>, session: UserInfo) => void;
+  _delete?: (req: PostReq<ObjectType>, res: Res<ObjectType>, session: UserInfo) => void;
+  _patch?: (req: PostReq<ObjectType>, res: Res<ObjectType>, session: UserInfo) => void;
 
   success = (res: Res<ObjectType>, data: any) => {
     res
@@ -33,31 +40,43 @@ export abstract class ApiRoute {
       });
   }
 
-  createHandler = (req: NextApiRequest, res: NextApiResponse) => {
+  createHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await unstable_getServerSession(req, res, nextAuthOptions)
+    if (!req.url?.startsWith('/api/public') && session === null) {
+      // 세션이 존재하지 않고 pubcli이 아닐때 401 에러
+      throw new HttpError(401);
+    }
+    const account = await prisma.account.findFirst({
+      // @ts-ignore
+      where: { userId: Number(session?.id) },
+    });
+
+    const userInfo = { ...account, ...session?.user } as UserInfo
+
     if (req.method === "GET") {
       if (typeof this._get === "function") {
-        return this._get(req, res);
+        return this._get(req, res, userInfo);
       }
       throw new HttpError(405);
     }
 
     if (req.method === "POST") {
       if (typeof this._post === "function") {
-        return this._post(req, res);
+        return this._post(req, res, userInfo);
       }
       throw new HttpError(405);
     }
 
     if (req.method === "DELETE") {
       if (typeof this._delete === "function") {
-        return this._delete(req, res);
+        return this._delete(req, res, userInfo);
       }
       throw new HttpError(405);
     }
 
     if (req.method === "PATCH") {
       if (typeof this._patch === "function") {
-        return this._patch(req, res);
+        return this._patch(req, res, userInfo);
       }
       throw new HttpError(405);
     }
