@@ -11,21 +11,22 @@ import { SideBar, Badge } from "antd-mobile";
 // import { tabs } from "./tabs";
 
 export async function getServerSideProps(context: NextPageContext) {
-  
   return {
     props: { hello: "world" },
   };
 }
 export default function Home() {
+  const [data, setData] = useState<any>();
   // 랭킹화면이 나와야한다.
   return (
     <div
       onClick={async () => {
         const a = await axios.get("/api/holy");
-        // console.log(a);
+        setData(a);
       }}
     >
       홀리
+      <div>{JSON.stringify(data)}</div>
     </div>
   );
 }
