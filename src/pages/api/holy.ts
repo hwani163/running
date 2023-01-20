@@ -1,7 +1,7 @@
 import { ApiRoute, validator } from "../../controller/core";
 import type { UserInfo, GetReq, Res } from "../../controller/core";
 import z from "zod";
-import { strava } from '../../controller/strava';
+import { strava } from "../../controller/strava";
 import { Session } from "next-auth";
 export const HelloParams = z.object({
   id: z.number().or(z.nan()),
@@ -57,21 +57,19 @@ export type HelloParams = z.infer<typeof HelloParams>;
 class RouteClass extends ApiRoute {
   _get = async (
     req: GetReq<{ user: string; hello: string }>,
-    res: Res<UserInfo>,
-    userInfo: UserInfo,
+    res: Res<any>,
+    userInfo: UserInfo
   ) => {
-    console.log(userInfo)
+    console.log(userInfo);
     if (userInfo.access_token) {
       //@ts-ignore
-      const result = await strava(userInfo.access_token).activities.get({
-        id:8355666007
-      })
-      // console.log(result);
+      const result = await strava(userInfo.access_token).athlete.listActivities(
+        {
+          per_page: 50,
+        }
+      );
+      res.status(200).json({ success: true, data: result, message: "good" });
     }
-
-    res
-      .status(200)
-      .json({ success: true, data: userInfo, message: "good" });
   };
 }
 export default new RouteClass().createHandler;

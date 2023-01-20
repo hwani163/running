@@ -14,7 +14,7 @@ export const nextAuthOptions: NextAuthOptions = {
       clientSecret: process.env.STRAVA_SECRET,
       authorization: {
         params: {
-          scope: "read,activity:read",
+          scope: "activity:read_all",
         },
       },
       token: {
